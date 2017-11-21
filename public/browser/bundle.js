@@ -1083,6 +1083,10 @@ window.addEventListener('keyup', function (event) {
 
 // ASSETS
 
+var menuButton_icon_video = 'public/browser/1c0407bff47119249baa273d1228a8dc.svg'
+var menuButton_icon_chat = 'public/browser/f52e6c14c14ea39bfc34476c64edc15b.svg'
+var menuButton_icon_task = 'public/browser/6c9dbd8cf85ce83f52d752104b5406e2.svg'
+
 var FONT = 'Pixelade';
 var font_url = 'public/browser/af1d3bb10392d997b8ff1367e2d22611.ttf'
 var font = bel`
@@ -1093,6 +1097,7 @@ var font = bel`
     }
   </style>
 `
+
 document.head.appendChild(font)
 
 // CSS
@@ -1124,21 +1129,21 @@ var css = csjs`
     border: 5px solid #d6dbe1;
   }
   button {
+    border-radius: 0;
     cursor: pointer;
     width: 100px;
     height: 100%;
     font-size: 50px;
     font-weight: 900;
     font-family: ${FONT};
+    background-color: #43409a;
     border: none;
-    background-color: #ffd399;
     color: white;
   }
   button:hover {
-    background-color: #43409a;
+    background-color: #ffd399;
   }
   .header {
-    background-color: red;
     width: 230px;
   }
   .logo {
@@ -1174,10 +1179,40 @@ var css = csjs`
     width: 70%;
     height: 85vh;
   }
-  .narrow {
-    margin: 1% 0 1% 2%;
+  .rightPanel {
+    margin: 0% 0 0% 3%;
     width: 27%;
-    height: 85vh;
+    height: 100%;
+  }
+  .rightPanelMenu {
+    border-right: 5px solid #d6dbe1;
+    border-left: 5px solid #d6dbe1;
+    height: 7vh;
+  }
+  .menuButtons {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    justify-content: space-evenly;
+  }
+  .menuButton {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    border-top: 1px solid #d6dbe1;
+    border-bottom: 1px solid #d6dbe1;
+    border-right: 2.5px solid #d6dbe1;
+    border-left: 2.5px solid #d6dbe1;
+    background-color: white;
+  }
+  .menuButton:hover {
+    background-color: #ffd399;
+    cursor: pointer;
+  }
+  .menuButtonIcon {
+    height: 5vh;
   }
   .video {
     border: 5px solid #d6dbe1;
@@ -1194,7 +1229,7 @@ var css = csjs`
   .chat {
     border: 5px solid #d6dbe1;
     width: 100%;
-    height: 85vh;
+    height: 83vh;
   }
 `
 
@@ -1264,6 +1299,29 @@ var video = iframe(`https://www.youtube.com/embed/${videos[0]}`, css.video)
 var editor = iframe("https://codesandbox.io/embed/m38n0vrm98", css.editor)
 var chat = iframe("https://gitter.im/wizardamigosinstitute/program/~embed", css.chat)
 
+var rightPanelMenu = bel`
+  <div class=${css.rightPanelMenu}>
+    <div class=${css.menuButtons}>
+      <div class=${css.menuButton} onclick=${appendSelectedPanel}><img class=${css.menuButtonIcon} src="${menuButton_icon_video}"></div>
+      <div class=${css.menuButton}><img class=${css.menuButtonIcon} src="${menuButton_icon_task}"></div>
+      <div class=${css.menuButton}><img class=${css.menuButtonIcon} src="${menuButton_icon_chat}"></div>
+    </div>
+  </div>`
+
+var rightPanel = bel`
+  <div class=${css.rightPanel}>
+    ${rightPanelMenu}
+    ${chat}
+  </div>
+`
+function appendSelectedPanel (e) {
+  console.log(e.target)
+  var selectedPanel = bel`
+    <div>Change panel</div>
+  `
+  rightPanel.removeChild(rightPanel.children[1])
+  rightPanel.appendChild(selectedPanel)
+}
 
 var stats = bel`<span class=${css.stats}>${series} Lesson ${lesson + 1}/${videos.length}</span>`
 
@@ -1279,9 +1337,7 @@ var app = bel`
         ${video}
         ${editor}
       </div>
-      <div class=${css.narrow}>
-        ${chat}
-      </div>
+      ${rightPanel}
     </div>
   </div>
 `
